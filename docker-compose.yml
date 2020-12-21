@@ -168,11 +168,11 @@ services:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
         - "${WORKSPACE_SSH_PORT}:22"
-        - "${WORKSPACE_BROWSERSYNC_HOST_PORT}:3000"
-        - "${WORKSPACE_BROWSERSYNC_UI_HOST_PORT}:3001"
-        - "${WORKSPACE_VUE_CLI_SERVE_HOST_PORT}:8080"
-        - "${WORKSPACE_VUE_CLI_UI_HOST_PORT}:8000"
-        - "${WORKSPACE_ANGULAR_CLI_SERVE_HOST_PORT}:4200"
+        ##- "${WORKSPACE_BROWSERSYNC_HOST_PORT}:3000"
+        ##- "${WORKSPACE_BROWSERSYNC_UI_HOST_PORT}:3001"
+        ##- "${WORKSPACE_VUE_CLI_SERVE_HOST_PORT}:8080"
+        ##- "${WORKSPACE_VUE_CLI_UI_HOST_PORT}:8000"
+        ##- "${WORKSPACE_ANGULAR_CLI_SERVE_HOST_PORT}:4200"
       tty: true
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
@@ -822,7 +822,7 @@ services:
           - ADMINER_DESIGN=${ADM_DESIGN}
           - ADMINER_DEFAULT_SERVER=${ADM_DEFAULT_SERVER}
       ports:
-        - "${ADM_PORT}:8080"
+        - "${ADM_PORT}:8081"
       depends_on:
         - php-fpm
       networks:
@@ -1054,17 +1054,6 @@ services:
         - frontend
         - backend
 
-### Grafana ################################################
-    grafana:
-      build:
-        context: ./grafana
-      volumes:
-        - ${DATA_PATH_HOST}/grafana:/var/lib/grafana
-      ports:
-        - "${GRAFANA_PORT}:3000"
-      networks:
-        - backend
-
 ### Graylog #######################################
     graylog:
       build: ./graylog
@@ -1092,6 +1081,55 @@ services:
       user: graylog
       volumes:
         - ${DATA_PATH_HOST}/graylog:/usr/share/graylog/data
+      networks:
+        - backend
+
+### Grafana ################################################
+    grafana:
+      build:
+        context: ./grafana
+      volumes:
+        - ${DATA_PATH_HOST}/grafana:/var/lib/grafana
+      #restart: always
+      ports:
+        - "${GRAFANA_PORT}:3000"
+      networks:
+        - backend
+
+### InfluxDB ################################################
+    influxdb:
+      build:
+        context: ./influxdb
+      volumes:
+        - ${DATA_PATH_HOST}/influxdb:/var/lib/influxdb
+        - ${INFLUXDB_CONFIG_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      #restart: always
+      ports:
+        - "${INFLUXDB_PORT}:8086"
+      networks:
+        - backend
+
+### Telegraf ################################################
+    telegraf:
+      build:
+        context: ./telegraf
+      environment:
+        HOST_ETC: /hostfs/etc
+        HOST_PROC: /hostfs/proc
+        HOST_SYS: /hostfs/sys
+        HOST_VAR: /hostfs/var
+        HOST_RUN: /hostfs/run
+        HOST_MOUNT_PREFIX: /hostfs
+      volumes:
+        - ${DATA_PATH_HOST}/telegraf:/var/lib/telegraf
+        - ${TELEGRAF_CONFIG_PATH}/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+        - /:/hostfs:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+      #restart: always
+      ports:
+        - "${TELEGRAF_STATSD_PORT}:8125"
+        - "${TELEGRAF_UDP_PORT}:8092"
+        - "${TELEGRAF_TCP_PORT}:8094"
       networks:
         - backend
 
