@@ -1,3 +1,4 @@
-FROM gitlab/gitlab-ce:latest
+ARG GITLAB_VERSION
+FROM gitlab/gitlab-ce:${GITLAB_VERSION}
 
 LABEL maintainer="ahkui <ahkui@outlook.com>"

@@ -1,4 +1,5 @@
-FROM memcached:latest
+ARG MEMCACHED_VERSION
+FROM memcached:${MEMCACHED_VERSION}
 
 LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 

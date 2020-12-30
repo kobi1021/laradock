@@ -357,10 +357,12 @@ CLICKHOUSE_HOST_LOG_PATH=./logs/clickhouse
 
 ### REDIS #################################################
 
+REDIS_VERSION=latest
 REDIS_PORT=6379
 
 ### REDIS CLUSTER #########################################
 
+REDIS_CLUSTER_VERSION=latest
 REDIS_CLUSTER_PORT_RANGE=7000-7005
 
 ### ZooKeeper #############################################
@@ -408,6 +410,7 @@ SQS_MANAGEMENT_HTTP_HOST_PORT=9325
 
 ### RABBITMQ ##############################################
 
+RABBITMQ_VERSION=alpine
 RABBITMQ_NODE_HOST_PORT=5672
 RABBITMQ_MANAGEMENT_HTTP_HOST_PORT=15672
 RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT=15671
@@ -434,6 +437,7 @@ DEJAVU_HTTP_PORT=1358
 
 ### MEMCACHED #############################################
 
+MEMCACHED_VERSION=latest
 MEMCACHED_HOST_PORT=11211
 
 ### BEANSTALKD CONSOLE ####################################
@@ -456,6 +460,9 @@ MINIO_PORT=9000
 
 ### ADMINER ###############################################
 
+ADM_VERSION=4.7.8
+ADM_DOWNLOAD_SHA256=eadca9f2194702a4c0bc74ad02846bf88fdf521128c205ac0ec2c345489b1384
+ADM_SRC_DOWNLOAD_SHA256=051544a8d782174218e6c152d777ad50437711b01a010b8c174162f3c066a7c0
 ADM_PORT=8081
 ADM_INSTALL_MSSQL=false
 ADM_PLUGINS=
@@ -519,15 +526,18 @@ CONFLUENCE_HOST_HTTP_PORT=8090
 
 ### GRAFANA ###############################################
 
+GRAFANA_VERSION=7.3.6
 GRAFANA_PORT=3000
 
 ### INFLUXDB ###############################################
 
+INFLUXDB_VERSION=1.8.3
 INFLUXDB_PORT=8086
 INFLUXDB_CONFIG_PATH=./influxdb
 
 ### TELEGRAF ###############################################
 
+TELEGRAF_VERSION=1.16.3
 TELEGRAF_CONFIG_PATH=./telegraf
 TELEGRAF_STATSD_PORT=8125
 TELEGRAF_UDP_PORT=8092
@@ -699,6 +709,8 @@ SOLR_DATAIMPORTHANDLER_MYSQL=false
 SOLR_DATAIMPORTHANDLER_MSSQL=false
 
 ### GITLAB ###############################################
+GITLAB_VERSION=latest
+GITLAB_RUNNER_VERSION=latest
 GITLAB_POSTGRES_INIT=true
 GITLAB_HOST_HTTP_PORT=8989
 GITLAB_HOST_HTTPS_PORT=9898

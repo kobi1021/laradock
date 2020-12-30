@@ -1,3 +1,4 @@
-FROM grafana/grafana:7.3.6
+ARG GRAFANA_VERSION
+FROM grafana/grafana:${GRAFANA_VERSION}
 
 EXPOSE 3000

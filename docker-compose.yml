@@ -643,7 +643,10 @@ services:
 
   ### Redis ################################################
     redis:
-      build: ./redis
+      build:
+        context: ./redis
+        args:
+          - REDIS_VERSION=${REDIS_VERSION}
       volumes:
         - ${DATA_PATH_HOST}/redis:/data
       ports:
@@ -653,7 +656,10 @@ services:
 
 ### Redis Cluster ##########################################
     redis-cluster:
-      build: ./redis-cluster
+      build:
+        context: ./redis-cluster
+        args:
+          - REDIS_CLUSTER_VERSION=${REDIS_CLUSTER_VERSION}
       ports:
         - "${REDIS_CLUSTER_PORT_RANGE}:7000-7005"
       networks:
@@ -690,7 +696,10 @@ services:
 
 ### Memcached ############################################
     memcached:
-      build: ./memcached
+      build:
+        context: ./memcached
+        args:
+          - MEMCACHED_VERSION=${MEMCACHED_VERSION}
       volumes:
         - ${DATA_PATH_HOST}/memcached:/var/lib/memcached
       ports:
@@ -727,7 +736,10 @@ services:
 
 ### RabbitMQ #############################################
     rabbitmq:
-      build: ./rabbitmq
+      build:
+        context: ./rabbitmq
+        args:
+          - RABBITMQ_VERSION=${RABBITMQ_VERSION}
       ports:
         - "${RABBITMQ_NODE_HOST_PORT}:5672"
         - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
@@ -858,6 +870,9 @@ services:
         context: ./adminer
         args:
           - INSTALL_MSSQL=${ADM_INSTALL_MSSQL}
+          - ADM_VERSION=${ADM_VERSION}
+          - ADM_DOWNLOAD_SHA256=${ADM_DOWNLOAD_SHA256}
+          - ADM_SRC_DOWNLOAD_SHA256=${ADM_SRC_DOWNLOAD_SHA256}
       environment:
           - ADMINER_PLUGINS=${ADM_PLUGINS}
           - ADMINER_DESIGN=${ADM_DESIGN}
@@ -1129,6 +1144,8 @@ services:
     grafana:
       build:
         context: ./grafana
+        args:
+          - GRAFANA_VERSION=${GRAFANA_VERSION}
       volumes:
         - ${DATA_PATH_HOST}/grafana:/var/lib/grafana
       #restart: always
@@ -1141,6 +1158,8 @@ services:
     influxdb:
       build:
         context: ./influxdb
+        args:
+          - INFLUXDB_VERSION=${INFLUXDB_VERSION}
       volumes:
         - ${DATA_PATH_HOST}/influxdb:/var/lib/influxdb
         - ${INFLUXDB_CONFIG_PATH}/influxdb.conf:/etc/influxdb/influxdb.conf:ro
@@ -1154,6 +1173,8 @@ services:
     telegraf:
       build:
         context: ./telegraf
+        args:
+          - TELEGRAF_VERSION=${TELEGRAF_VERSION}
       environment:
         HOST_ETC: /hostfs/etc
         HOST_PROC: /hostfs/proc
@@ -1349,6 +1370,8 @@ services:
     gitlab:
       build:
         context: ./gitlab
+        args:
+          - GITLAB_VERSION=${GITLAB_VERSION}
       environment:
         GITLAB_OMNIBUS_CONFIG: |
           external_url '${GITLAB_DOMAIN_NAME}'
@@ -1380,7 +1403,7 @@ services:
         - redis
         - postgres
     gitlab-runner:
-      image: gitlab/gitlab-runner:latest
+      image: gitlab/gitlab-runner:${GITLAB_RUNNER_VERSION}
       environment:
         - CI_SERVER_URL=${GITLAB_CI_SERVER_URL}
         - REGISTRATION_TOKEN=${GITLAB_RUNNER_REGISTRATION_TOKEN}
