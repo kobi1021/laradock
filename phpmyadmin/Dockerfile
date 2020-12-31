@@ -1,4 +1,5 @@
-FROM phpmyadmin/phpmyadmin
+ARG PMA_VERSION
+FROM phpmyadmin/phpmyadmin:${PMA_VERSION}
 
 LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>"
 

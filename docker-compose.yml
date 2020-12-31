@@ -591,7 +591,10 @@ services:
 
 ### MongoDB ##############################################
     mongo:
-      build: ./mongo
+      build:
+        context: ./mongo
+        args:
+          - MONGODB_VERSION=${MONGODB_VERSION}
       ports:
         - "${MONGODB_PORT}:27017"
       volumes:
@@ -850,7 +853,10 @@ services:
 
 ### phpMyAdmin ###########################################
     phpmyadmin:
-      build: ./phpmyadmin
+      build:
+        context: ./phpmyadmin
+        args:
+          - PMA_VERSION=${PMA_VERSION}
       environment:
         - PMA_ARBITRARY=1
         - MYSQL_USER=${PMA_USER}
@@ -1517,6 +1523,8 @@ services:
     mongo-webui:
       build:
         context: ./mongo-webui
+        args:
+          - MONGO_WEBUI_VERSION=${MONGO_WEBUI_VERSION}
       environment:
         - ROOT_URL=${MONGO_WEBUI_ROOT_URL}
         - MONGO_URL=${MONGO_WEBUI_MONGO_URL}
@@ -1603,6 +1611,8 @@ services:
     docker-registry:
       build:
         context: ./docker-registry
+        args:
+          - DOCKER_REGISTRY_VERSION=${DOCKER_REGISTRY_VERSION}
       volumes:
         - /etc/localtime:/etc/localtime:ro
         - ${DATA_PATH_HOST}/docker-registry:/var/lib/registry
@@ -1615,6 +1625,8 @@ services:
     docker-web-ui:
       build:
         context: ./docker-web-ui
+        args:
+          - DOCKER_WEBUI_REGISTRY_VERSION=${DOCKER_WEBUI_REGISTRY_VERSION}
       environment:
         - TZ=${WORKSPACE_TIMEZONE}
         - ENV_DOCKER_REGISTRY_HOST=${DOCKER_WEBUI_REGISTRY_HOST}

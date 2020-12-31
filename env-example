@@ -471,6 +471,8 @@ ADM_DEFAULT_SERVER=mysql
 
 ### PHP MY ADMIN ##########################################
 
+PMA_VERSION=5.0.4
+
 # Accepted values: mariadb - mysql
 
 PMA_DB_ENGINE=mysql
@@ -580,6 +582,7 @@ RETHINKDB_PORT=8090
 
 ### MONGODB ###############################################
 
+MONGODB_VERSION=latest
 MONGODB_PORT=27017
 
 ### CADDY #################################################
@@ -757,6 +760,7 @@ REDIS_WEBUI_CONNECT_PORT=6379
 REDIS_WEBUI_PORT=9987
 
 ### MONGOWEBUI ###############################################
+MONGO_WEBUI_VERSION=4.0.1
 MONGO_WEBUI_PORT=3000
 MONGO_WEBUI_ROOT_URL=http://localhost
 MONGO_WEBUI_MONGO_URL=mongodb://mongo:27017/
@@ -774,9 +778,11 @@ IDE_CODIAD_PORT=985
 IDE_ICECODER_PORT=986
 
 ### DOCKERREGISTRY ###############################################
+DOCKER_REGISTRY_VERSION=2
 DOCKER_REGISTRY_PORT=5000
 
 ### DOCKERWEBUI ###############################################
+DOCKER_WEBUI_REGISTRY_VERSION=v2
 DOCKER_WEBUI_REGISTRY_HOST=docker-registry
 DOCKER_WEBUI_REGISTRY_PORT=5000
 # if have use https proxy please set to 1
