@@ -1,4 +1,5 @@
-FROM roribio16/alpine-sqs
+ARG SQS_VERSION
+FROM roribio16/alpine-sqs:${SQS_VERSION}
 
 LABEL maintainer="Ronald E. Oribio R. https://github.com/roribio"
 

@@ -725,7 +725,10 @@ services:
 
 ### SQS #############################################
     sqs:
-      build: ./sqs
+      build:
+        context: ./sqs
+        args:
+          - SQS_VERSION=${SQS_VERSION}
       ports:
         - "${SQS_NODE_HOST_PORT}:9324"
         - "${SQS_MANAGEMENT_HTTP_HOST_PORT}:9325"
@@ -1051,7 +1054,10 @@ services:
 ### Varnish ##########################################
     proxy:
       container_name: proxy
-      build: ./varnish
+      build:
+        context: ./varnish
+        args:
+          - VARNISH_VERSION=${VARNISH_VERSION}
       expose:
         - ${VARNISH_PORT}
       environment:
@@ -1071,7 +1077,10 @@ services:
 
     proxy2:
       container_name: proxy2
-      build: ./varnish
+      build:
+        context: ./varnish
+        args:
+          - VARNISH_VERSION=${VARNISH_VERSION}
       expose:
         - ${VARNISH_PORT}
       environment:
@@ -1507,6 +1516,8 @@ services:
     redis-webui:
       build:
         context: ./redis-webui
+        args:
+          - REDIS_WEBUI_VERSION=${REDIS_WEBUI_VERSION}
       environment:
         - ADMIN_USER=${REDIS_WEBUI_USERNAME}
         - ADMIN_PASS=${REDIS_WEBUI_PASSWORD}
@@ -1808,6 +1819,8 @@ services:
     traefik:
       build:
         context: ./traefik
+        args:
+          - TRAEFIK_VERSION=${TRAEFIK_VERSION}
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ./traefik/data:/data
