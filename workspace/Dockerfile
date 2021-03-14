@@ -147,6 +147,11 @@ RUN chown -R laradock:laradock /home/laradock/.composer
 RUN echo "" >> ~/.bashrc && \
     echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
 
+# Update composer
+ARG COMPOSER_VERSION=2
+ENV COMPOSER_VERSION ${COMPOSER_VERSION}
+RUN composer self-update --${COMPOSER_VERSION}
+
 USER laradock
 
 # Check if global install need to be ran
@@ -204,7 +209,7 @@ RUN chmod -R 644 /etc/cron.d
 
 USER root
 
-RUN apt-get update -yqq
+RUN apt-get -yqq update
 
 ###########################################################################
 # Drush:
@@ -220,7 +225,7 @@ ARG DRUSH_VERSION
 ENV DRUSH_VERSION ${DRUSH_VERSION}
 
 RUN if [ ${INSTALL_DRUSH} = true ]; then \
-    apt-get -y install mysql-client && \
+    apt-get -qq -y install mysql-client && \
     # Install Drush with the phar file.
     curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar | bash && \
     chmod +x /usr/local/bin/drush && \
@@ -498,8 +503,12 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 ARG INSTALL_AMQP=false
 
 RUN if [ ${INSTALL_AMQP} = true ]; then \
-    apt-get install librabbitmq-dev -y && \
-    pecl -q install amqp && \
+    apt-get install -yqq librabbitmq-dev && \
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
+      printf "\n" | pecl install amqp-1.11.0beta; \
+    else \
+      printf "\n" | pecl install amqp; \
+    fi && \
     echo "extension=amqp.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/amqp.ini && \
     ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/amqp.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/30-amqp.ini \
 ;fi
@@ -630,7 +639,7 @@ RUN if [ ${INSTALL_INOTIFY} = true ]; then \
 ###########################################################################
 
 ARG INSTALL_AST=false
-ARG AST_VERSION=1.0.3
+ARG AST_VERSION=1.0.10
 ENV AST_VERSION ${AST_VERSION}
 
 RUN if [ ${INSTALL_AST} = true ]; then \
@@ -1195,9 +1204,30 @@ USER laradock
 USER root
 
 ARG INSTALL_IMAGEMAGICK=false
+ARG IMAGEMAGICK_VERSION=latest
+ENV IMAGEMAGICK_VERSION ${IMAGEMAGICK_VERSION}
 
 RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
-    apt-get install -y imagemagick php-imagick \
+    apt-get install -y libmagickwand-dev imagemagick && \
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
+      apt-get install -y git && \
+      cd /tmp && \
+      if [ ${IMAGEMAGICK_VERSION} = "latest" ]; then \
+        git clone https://github.com/Imagick/imagick; \
+      else \
+        git clone --branch ${IMAGEMAGICK_VERSION} https://github.com/Imagick/imagick; \
+      fi && \
+      cd imagick && \
+      phpize && \
+      ./configure && \
+      make && \
+      make install && \
+      rm -r /tmp/imagick; \
+    else \
+      pecl install imagick; \
+    fi && \
+    echo "extension=imagick.so" >> /etc/php/${LARADOCK_PHP_VERSION}/mods-available/imagick.ini && \
+    ln -s /etc/php/${LARADOCK_PHP_VERSION}/mods-available/imagick.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/20-imagick.ini \
 ;fi
 
 ###########################################################################
@@ -1423,7 +1453,7 @@ RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
    libx11-dev \
    libjpeg62 \
    libxtst6 \
-   fontconfig \ 
+   fontconfig \
    libjpeg-turbo8-dev \
    xfonts-base \
    xfonts-75dpi \
